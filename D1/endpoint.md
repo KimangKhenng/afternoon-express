@@ -9,7 +9,7 @@ Get post by Id
 POST /posts
 Create a post
 
-PATCH /posts/{id}
+PATCH /posts/{id} 
 Edit a post by ID
 
 DELETE /posts/{id}
