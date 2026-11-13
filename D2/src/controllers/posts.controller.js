@@ -43,6 +43,7 @@ export const getPostById = (req, res) => {
     const post = requirePost(req, res)
     if (!post) return
     res.status(200).json(post)
+    // throw Error('Not found')
 }
 
 export const createPost = (req, res) => {
