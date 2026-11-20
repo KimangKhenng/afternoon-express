@@ -1,8 +1,16 @@
 import mongoose from 'mongoose';
 
 const categorySchema = new mongoose.Schema({
-    name: String,
-    slug: String,
+    name: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    slug: {
+        type: String,
+        required: true,
+        trim: true,
+    },
 }, {
     timestamps: true
 })

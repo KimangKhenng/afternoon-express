@@ -10,7 +10,7 @@ export const getAllCategories = async (req, res) => {
 export const getCategoryById = async (req, res) => {
     // const category = requireCategory(req, res)
     const category = await categoryModel.findById(req.params.id)
-    if (!category) return
+    if (!category) return res.status(200).json({})
     res.status(200).json(category)
 }
 
@@ -18,49 +18,21 @@ export const getCategoryById = async (req, res) => {
 export const createCategory = async (req, res) => {
     const { name, slug } = req.body ?? {}
 
-    if (!isNonEmptyString(name)) {
-        return res.status(400).json({ error: 'name is required' })
-    }
-    if (slug !== undefined && !isNonEmptyString(slug)) {
-        return res.status(400).json({ error: 'slug must be a non-empty string' })
-    }
-
-    const cleanName = name.trim()
-    const cleanSlug = slugify(slug ?? cleanName)
-    if (!cleanSlug) {
-        return res.status(400).json({ error: 'slug could not be generated from name' })
-    }
-    if (isTaken(cleanName, cleanSlug)) {
-        return res.status(409).json({ error: 'A category with this name or slug already exists' })
-    }
-
-    const category = { name: cleanName, slug: cleanSlug }
-
-    const newCategory = new categoryModel(category)
+    const newCategory = new categoryModel({
+        name,
+        slug
+    })
     await newCategory.save()
 
-    res.status(201).json(category)
+    res.status(201).json(newCategory)
 }
 
-// body: { "name"?: "...", "slug"?: "..." }
 export const updateCategory = async (req, res) => {
-    // const category = requireCategory(req, res)
-    // if (!category) return
-
     const { name, slug } = req.body ?? {}
-
-    if (name !== undefined && !isNonEmptyString(name)) {
-        return res.status(400).json({ error: 'name must be a non-empty string' })
-    }
-    if (slug !== undefined && !isNonEmptyString(slug)) {
-        return res.status(400).json({ error: 'slug must be a non-empty string' })
-    }
-
     const newCategory = await categoryModel.findByIdAndUpdate(req.params.id, {
         name: name,
         slug: slug
     })
-
     res.status(200).json(newCategory)
 }
 
